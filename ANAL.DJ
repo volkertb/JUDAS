@@ -1,0 +1,49 @@
+#
+# JUDAS library examples makefile for DJGPP v2.0
+#
+# note : nasm compiles for coff output :
+# nasm jasmdj.asm -ddjgpp -fcoff -E!nasm.err
+# rem nasm jasmdj.asm -dwatcom -fobj -E!nasm.err
+#
+
+CC = gcc
+AS = nasm
+AR = ar
+RANLIB = ranlib
+STRIP = strip
+COFF2EXE = stubify
+AFLAGS = -ddjgpp -fcoff
+CFLAGS = -g -c -Wall -Wno-pointer-sign -march=pentium -O2
+LFLAGS = -g
+
+OBJS = anal.o timer.o timerasm.o kbd.o kbdasm.o
+
+LIB = judaslib.a
+
+all : anal.exe clean
+	@echo done.
+
+# make the ANAL INVADERS game anal.exe
+anal.exe : $(OBJS) $(LIB)
+	$(CC) -o anal $(OBJS) $(LIB) $(LFLAGS)
+#	$(STRIP) anal
+	$(COFF2EXE) anal
+	@del anal > nul
+
+anal.o : anal.c
+	$(CC) $(CFLAGS) $<
+
+timer.o : timer.c
+	$(CC) $(CFLAGS) $<
+
+timerasm.o : timerasm.asm
+	$(AS) $(AFLAGS) $<
+
+kbd.o : kbd.c
+	$(CC) $(CFLAGS) $<
+
+kbdasm.o : kbdasm.asm
+	$(AS) $(AFLAGS) $<
+
+clean :
+	@if exist *.o del *.o > nul

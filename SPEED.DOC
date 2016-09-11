@@ -1,0 +1,40 @@
+JUDAS FAST MIXER, CUBIC PLAYER 2.00à++ & MIDAS 0.6.0 SPEED TEST
+---------------------------------------------------------------
+
+        CPU: AMD K5 PR166
+  Soundcard: VIBRA16 at A220 I5 D1 H5
+ Audio Mode: 16bit stereo at 44.1 kHz, with & without interpolation
+Test Method: Shell to DOS from player and measure amount of CPU time left
+             (by using a program which counts how many times it can increase
+             a counter before the BIOS 18.2 Hz clock increases)
+       Tune: T2-REMIX.XM (26 channels), CPU usage measured 10 seconds from
+             where the rock drums (?) enter
+    Remarks: CP2 used the Standard Mixer (equal to Fast Mixer in JUDAS).
+             Its AOI mode was used in the interpolation test. MIDAS couldn't
+             interpolate so it participated only in the first test.
+
+
+RESULTS
+-------
+
+TEST 1: Without interpolation
+
+   Player        CP2            JUDAS           MIDAS
+Time Left       88.7%           92.4%           92.6%
+
+TEST 2: With interpolation
+
+   Player        CP2            JUDAS
+Time Left       78.8%           85.1%
+
+
+CONCLUSIONS
+-----------
+
+In the non-interpolation test, JUDAS is only a little bit slower than MIDAS.
+One must note that JUDAS performs clipping of audio output, while MIDAS doesn't
+(it clips only 8bit output.) CP2 is clearly slower than the two.
+
+The interpolation test doesn't leave much to guess...however the interpolation
+of 8-bit samples in CP2 is more sophisticated (16-bit.) Cadaver can't hear the
+difference though!

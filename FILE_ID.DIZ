@@ -1,0 +1,17 @@
+ --+++***>>> JUDAS V2.10b <<<***+++--
+Apocalyptic Softwaremixing Soundsystem
+by Cadaver & Yehar, for WATCOM 32bit
+flat mode. AC97/HDA by Black Spider.
+NEW VERSION WITH NEW FIXES, ENHANCED
+QUALITY MIXER, TRUE VUMETERS, LOOPING
+CONTROL, WAV WRITER... + MORE
+
+Works with multitaskers. PMODEW/DOS4GW
+SB/SBPRO/SB16/GUS/AC97/HDA XM/S3M/MOD/WAV
+Total softwaremixing - No GUS limit!!!
+Clipping, Hermite interpolation, 32bit
+mixing, Click removal, An alternative
+ultra-fast mixer. Examples,Docs,Player
+and Full source included. Part of the
+library code related to HDA support
+falls under the GNU/GPL license.

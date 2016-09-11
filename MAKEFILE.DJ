@@ -1,0 +1,73 @@
+#
+# JUDAS library makefile for DJGPP v2.0
+#
+# note : nasm compiles for coff output :
+# nasm jasmdj.asm -ddjgpp -fcoff -E!nasm.err
+# rem nasm jasmdj.asm -dwatcom -fobj -E!nasm.err
+#
+
+CC = gcc
+AS = nasm
+AR = ar
+RANLIB = ranlib
+STRIP = strip
+COFF2EXE = stubify
+AFLAGS = -ddjgpp -fcoff
+#Warning: -O1/O2/O3 optimize will generate invalid code with GCC > 4.0.1
+CFLAGS = -g -c -Wall -Wno-unused -Wno-pointer-sign -march=pentium -Os
+LFLAGS = -g
+
+OBJS = judas.o judassmp.o judasraw.o judaswav.o judasio.o \
+       judasmem.o judastbl.o judasxm.o judasmod.o judass3m.o \
+	   judasdma.o jasmdj.o
+
+LIB = judaslib.a
+
+all : $(LIB) clean
+	@echo done.
+
+
+#make the judas sound library
+$(LIB) : $(OBJS)
+	@$(AR) rc $(LIB) $(OBJS)
+	$(RANLIB) $(LIB)
+
+judas.o : judas.c
+	$(CC) $(CFLAGS) $<
+
+judassmp.o : judassmp.c
+	$(CC) $(CFLAGS) $<
+
+judasraw.o : judasraw.c
+	$(CC) $(CFLAGS) $<
+
+judaswav.o : judaswav.c
+	$(CC) $(CFLAGS) $<
+
+judasio.o : judasio.c
+	$(CC) $(CFLAGS) $<
+
+judasmem.o : judasmem.c
+	$(CC) $(CFLAGS) $<
+
+judastbl.o : judastbl.c
+	$(CC) $(CFLAGS) $<
+
+judasxm.o : judasxm.c
+	$(CC) $(CFLAGS) $<
+
+judasmod.o : judasmod.c
+	$(CC) $(CFLAGS) $<
+
+judass3m.o : judass3m.c
+	$(CC) $(CFLAGS) $<
+
+judasdma.o : judasdma.c
+	$(CC) $(CFLAGS) $<
+
+jasmdj.o : jasmdj.asm
+	$(AS) $(AFLAGS) $<
+
+clean :
+	@if exist *.o del *.o > nul
+

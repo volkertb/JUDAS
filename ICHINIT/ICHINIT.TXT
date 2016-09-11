@@ -1,0 +1,328 @@
+
+****************************************************************************
+* Intel ICH AC97 Audio codec initialization for real mode DOS
+* By Piotr Ulaszewski (August 2007)
+* piotrkn22@poczta.onet.pl
+* http://wwww.republika.pl/piotrkn22/
+* developement ver 2.0 (August 2007)
+*****************************************************************************
+
+Use and modify at your own risk!
+================================
+
+    Legal (freeware license agreement) :
+    ------------------------------------
+    This program (ICHINIT.EXE) is provided "AS IS". The author
+    (Piotr Ulaszewski) does not assume any responsibility for special,
+    incidental or any other kind of damages arising out of or resulting
+    from the use, misuse or modification of this software.
+
+    This software comes without any kind of warranty, either expressed
+    or implied, including, but not limited to the implied warranties of
+    merchantability or fitness for a particulair purpose.
+
+    This software is "FREEWARE". A non-exclusive permission to use this
+    software in it's unmodified form is granted.
+
+    You may redistribute copies of this software provided that you
+    include all of the files that came with the original package.
+    In case ICHINIT is redistributed as part of another freeware or
+    commercial package only ICHINIT.EXE and ICHINIT.TXT files need
+    to be included in the redistributed package.
+    
+    You may further sell applications, products or packages with this
+    utility included. However you are not allowed to sell this software
+    as a stand alone product, except for a small, usual fee covering
+    the redistribution itself.
+    
+    The included source code may be modified for your own use. However
+    modified versions of the source code or binaries compiled from modified
+    versions of the source code must not be redistributed without prior
+    permission from the author.
+
+    If you don't agree with those terms or if your jurisdiction does not
+    allow the exclusion of warranty and liability as stated above you are
+    not allowed to use this software at all.
+
+
+
+NOTE : THIS UTILITY IS NOT A SOUND DRIVER (SB COMPATIBLE) FOR REAL MODE DOS !
+
+---------------------------------------------------------------------------
+This is a real mode DOS initializer (V86 mode supported too) for Intel 8xx
+chipsets (or anything else with the ICH compatible southbridge access)
+with integrated AC'97 Audio codec on board. The program will not run under
+any Windows, OS/2 or Linux DosEmu version. When a known operating system,
+such a Windows or OS/2 is detected the utility will simply terminate.
+The user should not force (by code modification) this program to run
+in advanced protected mode operating systems (such as Win 9x or OS/2).
+Doing so could seriously mess up the integrity of the operating system,
+even with a possibilty to damage the ICH controller.
+---------------------------------------------------------------------------
+
+This simple utility allows you to enable the AC'97 Audio codec under clean
+DOS (if it was disabled after a RESET and the BIOS did not activate it on
+startup) and set the desired volumes for any in/out channel.
+The BIOS setting of the machine that boots directly to DOS should be a
+non plug-n-play O/S with the onboard audio device enabled.
+
+After launching the initialization utility you will be able to listen to a CD,
+change the volume of the beep signal transmited on to the AC97 (which you can
+hear in your speakers), modify the volume of the wave out signal, and all
+other AC'97 compatible channels. In fact this initialization utility will
+unlock the audio device set the AC97 sample rate to 44100Hz and allow
+the user access to that device at register level (Mixer and Bus Master I/O
+base must be retrieved from the PCI bus) without writeing complicated
+startup code. The AC97 device will be initialized to 2 channels (stereo),
+16 bit PCM OUT samples, DRA (Double Rate Audio) disabled by cold reset
+and VRA (Variable Rate Audio) enabled. All unsupported volume levels
+will reset to their default values by executing a cold reset.
+
+NOTE : This utility should work (although there is absolutely
+no guarantee it will) with AC97 audio codecs (primary AC97 codec only)
+integrated on most Intel/SIS chipsets and some AMD/nVidia chipsets.
+
+
+
+The following switches with a volume range from 0 to 32 are available :
+
+/MO: or /mo:   master out volume (16)
+/HO: or /ho:   headphones out volume (16)
+/MM: or /mm:   master mono out volume (16)
+/WO: or /wo:   wave out volume (16)
+/BO: or /bo:   beep out volume (32)
+/PO: or /po:   phone out volume (28)
+/MI: or /mi:   microphone in volume (0)
+/LI: or /li:   line in volume (28)
+/CD: or /cd:   CD out volume (28)
+/VD: or /vd:   VIDEO out volume (28)
+/AX: or /ax:   AUX in volume (28)
+/3C: or /3c:   3D center adjustment (0 = off)
+/3D: or /3d:   3D depth adjustment (0 = off)
+/3P: or /3p:   3D path specifier (0 = pre)
+/MB: or /mb:   master bass gain (0 = off)
+/MT: or /mt:   master treble gain (0 = off)
+/SS: or /ss:   simulated stereo (0 = off)
+/BB: or /bb:   bass boost (0 = off)
+
+The values in parenthesis are the default settings which will be applied
+when no command line options are entered. Specifying a 0 (zero) level
+volume will mute/disable the appropriate channel. Please note, that
+the hardware must support bass and treble gain, simulated stereo, bass boost
+and 3D center/depth/path adjustment in order to use those extensions.
+
+NOTE: 3D path (pre/post), simulated stereo (off/on) and bass boost (off/on)
+only accept values 0 and 1. Any other value will be treated as 1 (enabled).
+
+
+
+master out/headphones out/master mono out
+=========================================
+limited intervals available : 3.0dB
+original intervals          : 1.5dB
+limited range available     : (-91.5dB > 0dB attenuation)
+original range              : (-94.5dB > 0dB attenuation)
+
+beep out
+========
+original range available    : (-45.0dB > 0dB attenuation)
+
+wave vol
+========
+limited intervals available : 1.5dB every two steps
+original intervals          : 1.5dB
+limited range available     : (-12.0dB > +12dB boost)
+original range              : (-34.5dB > +12dB boost)
+default settings            : 0dB boost
+
+bass/treble gain
+================
+limited intervals available : 1.5dB every two steps
+original intervals          : 1.5dB
+original range available    : (-10.5dB > 10.5dB attenuation)
+
+
+
+Supported controllers :
+=====================================
+// supported controllers AC97 INTEL
+Intel 82801AA (ICH) integrated AC97 audio codec
+Intel 82801AB (ICH0) integrated AC97 audio codec
+Intel 82801BA (ICH2) integrated AC97 audio codec
+Intel 82801CA (ICH3) integrated AC97 audio codec
+Intel 82801DB (ICH4) integrated AC97 audio codec
+Intel 82801EB/ER (ICH5/ICH5R) integrated AC97 audio codec
+Intel 6300ESB integrated AC97 audio codec
+Intel 82801FB (ICH6) integrated AC97 audio codec
+Intel 82801GB (ICH7) integrated AC97 audio codec
+Intel 82443MX integrated AC97 audio codec
+
+// supported controllers AC97 other (AMD/NVIDIA/SIS)
+AMD 768 integrated AC97 audio codec
+AMD 8111 integrated AC97 audio codec
+Nvidia nForce integrated AC97 audio codec
+Nvidia nForce2 integrated AC97 audio codec
+Nvidia CK8 (nForce compatible) integrated AC97 audio codec
+Nvidia nForce3 integrated AC97 audio codec
+Nvidia CK8S (nForce compatible) integrated AC97 audio codec
+Nvidia nForce4 integrated AC97 audio codec
+Nvidia nForce MCP51 integrated AC97 audio codec
+Nvidia nForce MCP04 integrated AC97 audio codec
+Nvidia nForce MCP integrated AC97 audio codec
+SiS SI7012 integrated AC97 audio codec
+
+// supported controllers HDA INTEL (development stage)
+Intel 82801FB (ICH6) integrated High Definition Audio controller
+Intel 82801G (ICH7) integrated High Definition Audio controller
+Intel ESB2 integrated High Definition Audio controller
+Intel 82801H (ICH8) integrated High Definition Audio controller
+Intel 82801I (ICH9) integrated High Definition Audio controller
+
+// supported controllers HDA other (ATI/NVIDIA/SIS/ULI/VIA) (development stage)
+ATI Technologies SB450 integrated High Definition Audio controller
+ATI Technologies SB600 integrated High Definition Audio controller
+Nvidia nForce MCP51 integrated High Definition Audio controller
+Nvidia nForce MCP55 integrated High Definition Audio controller
+Nvidia nForce MCP61 integrated High Definition Audio controller
+Nvidia nForce MCP61b integrated High Definition Audio controller
+Nvidia nForce MCP65 integrated High Definition Audio controller
+Nvidia nForce MCP67 integrated High Definition Audio controller
+SIS Technologies integrated High Definition Audio controller
+ULI integrated High Definition Audio controller
+VIA Technologies integrated High Definition Audio controller
+        
+Note : ICH4+ controllers support is slightly different. The init procedure
+continues with success even if the primary codec ready bit doesn't show up.
+Legacy (ICH/ICH2/ICH3) I/O access compatibility will be enabled after init.
+
+
+
+The program will be able to identify over 80 different codecs :
+===============================================================
+Analog Devices AD1819
+Analog Devices AD1881
+Analog Devices AD1881A
+Analog Devices AD1885
+Analog Devices AD1886
+Analog Devices AD1887
+Analog Devices AD1886A
+Analog Devices AD1980
+Asahi Kasei AK4540
+Asahi Kasei AK4542
+Asahi Kasei AK4543
+ALC100
+ALC100P
+ALC200/200P
+ALC650
+ALC650D
+ALC650E
+ALC650F
+ALC655
+ALC658
+ALC658D
+ALC850
+CMedia CM9738
+CMedia
+CMedia CM9739
+CMedia CM9761 rev A
+CMedia CM9761 rev B
+CMedia CM9761 rev C
+Cirrus Logic CS4297
+Cirrus Logic CS4297
+Cirrus Logic CS4297A
+Cirrus Logic CS4297A rev A
+Cirrus Logic CS4297A rev B
+Cirrus Logic CS4298
+Cirrus Logic CS4294
+Cirrus Logic CS4294
+Cirrus Logic CS4299
+Cirrus Logic CS4299 rev A
+Cirrus Logic CS4299 rev C
+Cirrus Logic CS4299 rev D
+Cirrus Logic CS4201
+Cirrus Logic CS4205
+CXT66
+Diamond Technology DT0893
+ESS Allegro ES1988
+ICEnsemble ICE1232
+VIA Vinyl series
+National Semiconductor LM4549
+Silicon Laboratory Si3036
+Silicon Laboratory Si3038
+TriTech TR?????
+TriTech TR28022
+TriTech TR28023
+TriTech TR28026
+TriTech TR28028
+TriTech TR A5
+Winbond 83971D
+Wolfson WM9704
+WM9703/07/08/17
+WM9704M/WM9704Q
+Wolfson WM9705/WM9710
+Yamaha YMF753
+SigmaTel STAC9700
+SigmaTel STAC9704
+SigmaTel STAC9705
+SigmaTel STAC9708
+SigmaTel STAC9721/23
+SigmaTel STAC9744/45
+SigmaTel STAC9756/57
+SigmaTel STAC9750T
+SigmaTel STAC9783/84
+
+note : full list still to come
+Any unknown codec on an Intel ICH 8xx/9xx motherboard should still be initialized
+properly.
+
+
+
+The program will detect 28 different stereo 3D Enhancement technologys :
+========================================================================
+Analog Devices Phat Stereo
+Creative Stereo Enhancement
+National Semi 3D Stereo Enhancement
+YAMAHA Ymersion
+BBE 3D Stereo Enhancement
+Crystal Semi 3D Stereo Enhancement
+Qsound QXpander
+Spatializer 3D Stereo Enhancement
+SRS 3D Stereo Enhancement
+Platform Tech 3D Stereo Enhancement
+AKM 3D Audio
+Aureal Stereo Enhancement
+Aztech 3D Enhancement
+Binaura 3D Audio Enhancement
+ESS Technology Stereo Enhancement
+Harman International VMAx
+Nvidea 3D Stereo Enhancement
+Philips Incredible Sound
+Texas Instruments 3D Stereo Enhancement
+VLSI Technology 3D Stereo Enhancement
+TriTech 3D Stereo Enhancement
+Realtek 3D Stereo Enhancement
+Samsung 3D Stereo Enhancement
+Wolfson Microelectronics 3D Enhancement
+Delta Integration 3D Enhancement
+SigmaTel 3D Enhancement
+Winbond 3D Stereo Enhancement
+Rockwell 3D Stereo Enhancement
+
+
+
+Many thanks to :
+================
+Jeff Leyda - for helping me to understand how the AC'97 works and
+especially his Intel ICH AC'97 wav player sources available at
+http://www.programmersheaven.com
+In fact this program uses his pci.asm (pci access procedures).
+Moreover the ac97ich.inc include file is based on his ac97 defines.
+
+Alex Rodopoulos - for his feedback about the ICH4 controller AC'97
+integrated codec behaviour, and for the link to the ICH4 specs which
+proved to be very helpful.
+
+Matthias Goeke - for his feedback and for including some new controllers
+and codec IDs.
+
+Michael Tippach for the WDOSX DOS extender.

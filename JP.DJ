@@ -1,0 +1,43 @@
+#
+# JUDAS library examples makefile for DJGPP v2.0
+#
+# note : nasm compiles for coff output :
+# nasm jasmdj.asm -ddjgpp -fcoff -E!nasm.err
+# rem nasm jasmdj.asm -dwatcom -fobj -E!nasm.err
+#
+
+CC = gcc
+AS = nasm
+AR = ar
+RANLIB = ranlib
+STRIP = strip
+COFF2EXE = stubify
+AFLAGS = -ddjgpp -fcoff
+CFLAGS = -g -c -Wall -march=pentium -O2
+LFLAGS = -g
+
+OBJS = jp.o timer.o timerasm.o
+
+LIB = judaslib.a
+
+all : jp.exe clean
+	@echo done.
+
+# make the judas player jp.exe
+jp.exe : $(OBJS) $(LIB)
+	$(CC) -o jp $(OBJS) $(LIB) $(LFLAGS)
+#	$(STRIP) jp
+	$(COFF2EXE) jp
+	@del jp > nul
+
+jp.o : jp.c
+	$(CC) $(CFLAGS) $<
+
+timer.o : timer.c
+	$(CC) $(CFLAGS) $<
+
+timerasm.o : timerasm.asm
+	$(AS) $(AFLAGS) $<
+
+clean :
+	@if exist *.o del *.o > nul
